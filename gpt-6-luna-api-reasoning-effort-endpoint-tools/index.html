@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>gpt-6-luna API 怎么调：reasoning.effort 六档、Chat Completions 与 Responses 怎么选</title>
+<meta name="description" content="按 OpenAI 官方模型页和 GPT-6 迁移指南整理 gpt-6-luna 的调用参数：上下文与输出上限、reasoning.effort 六个档位、什么时候必须去掉 temperature、Chat Completions 里调用函数的限制、图片输入修复说明，以及通过中转调用时怎么验证。">
+<meta name="keywords" content="gpt-6-luna API 中转站,gpt-6-luna API,gpt-6-luna 接入,gpt-6-luna 价格,OpenAI 模型 API,API 中转,模型定价,token 计费">
+<link rel="canonical" href="https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-api-reasoning-effort-endpoint-tools/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="gpt-6-luna API 怎么调：reasoning.effort 六档、Chat Completions 与 Responses 怎么选">
+<meta property="og:description" content="按 OpenAI 官方模型页和 GPT-6 迁移指南整理 gpt-6-luna 的调用参数：上下文与输出上限、reasoning.effort 六个档位、什么时候必须去掉 temperature、Chat Completions 里调用函数的限制、图片输入修复说明，以及通过中转调用时怎么验证。">
+<meta property="og:url" content="https://api.openlux.ai/">
+<meta property="og:site_name" content="OpenLux">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="gpt-6-luna API 怎么调：reasoning.effort 六档、Chat Completions 与 Responses 怎么选">
+<meta name="twitter:description" content="按 OpenAI 官方模型页和 GPT-6 迁移指南整理 gpt-6-luna 的调用参数：上下文与输出上限、reasoning.effort 六个档位、什么时候必须去掉 temperature、Chat Completions 里调用函数的限制、图片输入修复说明，以及通过中转调用时怎么验证。">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://api.openlux.ai/#organization",
+      "name": "OpenLux",
+      "url": "https://api.openlux.ai",
+      "description": "了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。",
+      "sameAs": [
+        "https://openlux.ai",
+        "https://doc.openlux.ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#website",
+      "url": "https://a37836323.github.io/gpt-6-luna-api",
+      "name": "gpt-6-luna API 中转站：价格与接入说明（2026）",
+      "inLanguage": "zh-CN",
+      "publisher": {
+        "@id": "https://api.openlux.ai/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-api-reasoning-effort-endpoint-tools/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "OpenLux",
+          "item": "https://api.openlux.ai"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "gpt-6-luna API 中转站",
+          "item": "https://a37836323.github.io/gpt-6-luna-api/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "gpt-6-luna API 调用参数说明：推理档位、端点选择与工具限制",
+          "item": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-api-reasoning-effort-endpoint-tools/"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#application",
+      "name": "OpenLux API",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://api.openlux.ai",
+      "description": "了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。",
+      "offers": {
+        "@type": "Offer",
+        "price": "待实测",
+        "priceCurrency": "CNY",
+        "url": "https://api.openlux.ai",
+        "description": "模型定价资料以美元/百万 token 提供基准价，实际价格按用户所在分组的倍率计算；人民币结算方式、汇率口径及账户实际收费方式待确认。"
+      }
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-api-reasoning-effort-endpoint-tools/#article",
+      "headline": "gpt-6-luna API 调用参数说明：推理档位、端点选择与工具限制",
+      "datePublished": "2026-10-28",
+      "dateModified": "2026-10-29",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@id": "https://api.openlux.ai/#organization"
+      },
+      "publisher": {
+        "@id": "https://api.openlux.ai/#organization"
+      },
+      "mainEntityOfPage": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-api-reasoning-effort-endpoint-tools/"
+    }
+  ]
+}
+</script>
+<style>*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#fffefb;color:#1c1917;font-family:Inter,"HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased;
+text-rendering:optimizeLegibility}
+.stack-pane72{max-width:780px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:1.85rem;line-height:1.4;margin:.2em 0 .6em;letter-spacing:-.01em}
+h2{font-size:1.3rem;margin:2.2em 0 .7em;padding-bottom:.35em;
+border-bottom:2px solid #fed7aa}
+h3{font-size:1.08rem;margin:1.6em 0 .5em}
+a{color:#ea580c;text-decoration:none}
+a:hover,a:focus-visible{text-decoration:underline}
+code{background:#fff7ed;padding:.15em .4em;border-radius:4px;
+font-size:.9em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;
+padding:16px;overflow-x:auto;font-size:.86rem;line-height:1.6}
+pre code{background:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:1.2em 0;font-size:.94rem}
+th,td{border:1px solid #fed7aa;padding:10px 12px;text-align:left}
+th{background:#fff7ed;font-weight:600}
+ul,ol{padding-left:1.5em}
+ul{list-style-type:disc}
+li{margin:.4em 0}
+.row-col56{background:#fff7ed;border-left:3px solid #ea580c;
+border-radius:0 8px 8px 0;padding:14px 18px;margin:1.4em 0}
+.deck-card27{display:inline-block;background:#ea580c;color:#fff;
+padding:12px 26px;border-radius:8px;font-weight:600;margin:.6em 0}
+.deck-card27:hover{opacity:.88;text-decoration:none}
+.note-note26{color:#71717a;font-size:.86rem;margin-top:3em;
+padding-top:1.2em;border-top:1px solid #fed7aa}
+.head-row28{border:1px solid #fed7aa;border-radius:8px;
+padding:2px 18px;margin:.8em 0}
+.box-row24{overflow-x:auto}
+@media(max-width:600px){
+  body{font-size:15px}
+  h1{font-size:1.5rem}
+  h2{font-size:1.18rem}
+  .stack-pane72{padding:20px 16px 48px}
+  table{font-size:.85rem}
+  th,td{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}</style>
+</head>
+<body>
+<main class="stack-pane72">
+<p data-notice="price-20261025" style="margin:0 0 16px;padding:10px 14px;border:1px solid #f0c36d;background:#fff8e6;color:#5c4400;border-radius:6px;font-size:14px;line-height:1.6">本页价格与模型信息可能已有变化，请以官网为准：<a href="https://www.openlux.ai/pricing?utm_source=gpt-6-luna-api&amp;utm_medium=satellite&amp;utm_campaign=price_notice" style="color:#0b57d0">OpenLux 官网价格页</a></p>
+<p class="deck-deck53"><a href="https://a37836323.github.io/gpt-6-luna-api/">首页</a> ／ gpt-6-luna</p>
+<h1>gpt-6-luna API 调用参数说明：推理档位、端点选择与工具限制</h1>
+<p>gpt-6-luna 是 OpenAI 在 2026 年 9 月发布的推理模型，官方定位是「面向专注、大批量任务的最高效模型」。调用时最容易出问题的有三处：推理档位默认是 medium，不是 none；推理档位不为 none 时要去掉 temperature、top_p 等采样参数；在 Chat Completions 里调用函数只在 reasoning_effort 设为 none 时支持，要推理和工具一起用就走 Responses API。下面按官方模型页、GPT-6 使用指南、推理指南和更新日志逐项说明。</p>
+
+<div>
+<h2>官方规格：上下文、输出上限与支持的端点</h2>
+<p>OpenAI 模型页列出的 gpt-6-luna 规格：模型类型为推理模型，当前快照就是 gpt-6-luna；上下文窗口 1,050,000 token，其中最大输入 922,000 token，最大输出 128,000 token；知识截止日期 2026-05-18。</p>
+<p>输入支持文本和图片，输出只有文本。支持的端点是 Responses、Chat Completions 和 Batch。模型页列出的功能包括流式输出、Structured Outputs、函数调用、文件检索、图片输入、网页搜索和提示缓存。</p>
+<p>Responses API 里可用的内置工具，模型页列了 web_search、file_search、image_generation、code_interpreter、hosted_shell、apply_patch、skills、computer_use、mcp 和 tool_search。注意模型页同时写明：内置工具和函数调用都应使用 Responses API。</p>
+<p>计费方面，模型页写明输入超过 272K token 的请求整次按更高费率计费，Batch、Flex 与 Fast 各有不同费率，具体价格以官网价格页为准。</p>
+<h2>reasoning.effort 六个档位怎么设</h2>
+<p>gpt-6-luna 支持 none、low、medium、high、xhigh、max 六个推理档位，默认是 medium。推理指南也写明 GPT-6 Luna 省略推理档位时默认用 medium。参数写法因端点而不同：Responses 里写 reasoning.effort，Chat Completions 里写 reasoning_effort。</p>
+<p>推理指南对各档位的一般说明是：none 适合对延迟敏感、不需要推理或多步工具调用的任务，例如语音、快速信息检索和分类；low 推理较省，延迟增加不多，适合需要工具调用、规划、搜索或多步决策的场景。档位越低越快、token 越少，档位越高思考越完整，模型也会按任务难度自适应地分配推理。</p>
+<p>从旧模型迁过来时，GPT-6 迁移指南的建议是尽量保留原来实际生效的推理档位；原请求用的是 minimal 的，先改成 low，再用有代表性的任务对比效果。gpt-6-luna 支持 none，这一点和 gpt-6-astra、gpt-6.1-sol 不同，后两者不支持 none。</p>
+<p>如果同一段对话里要临时调高或调低推理档位，迁移指南建议在标准的单智能体请求中使用 configuration_update 输入项，保持请求级的 reasoning.effort 不变，以免破坏提示前缀缓存；采用前先看推理指南里的兼容性限制。</p>
+<h2>什么时候必须去掉 temperature、top_p 和 logprobs</h2>
+<p>GPT-6 迁移指南写明：推理档位不为 none 时，要从请求里去掉 temperature、top_p 和 top_logprobs；用 Chat Completions 的还要去掉 logprobs；用 Responses 的要把 message.output_text.logprobs 从 include 数组里删掉。</p>
+<p>因为 gpt-6-luna 的默认档位是 medium，请求里没有显式写 none 时，这条要求同样适用。常见情况是从旧代码直接把 model 改成 gpt-6-luna，但保留了原来的 temperature 设置，这时应先删掉这些参数再测。</p>
+<p>如果业务确实依赖 temperature 或 logprobs，可以评估把推理档位设为 none 是否能满足质量要求；官方只说明了 none 以外的档位要去掉这些参数，没有说明 none 档下各采样参数的具体效果，需要用自己的任务验证。</p>
+<h2>带工具调用时选 Chat Completions 还是 Responses</h2>
+<p>模型页和迁移指南对 gpt-6-luna 的说法一致：Chat Completions 只有在 reasoning_effort 设为 none 时才支持函数调用；需要推理和工具一起用，应改用 Responses API。web_search、file_search 这类内置工具同样要走 Responses。</p>
+<p>可以按这个顺序判断：只做纯文本或图片理解、不带 tools，两个端点都能用；带函数但任务不需要推理，可以留在 Chat Completions，把 reasoning_effort 设为 none；带函数且需要推理，或要用内置工具，就把这部分请求迁到 /v1/responses。</p>
+<p>迁到 Responses 时，OpenAI 的 Responses 迁移指南建议逐个业务流程迁移：先改端点、请求体和输出解析；迁移函数定义，并确认回传的函数调用结果带有正确的 call_id；用了 Structured Outputs 的，把 schema 从 response_format 移到 text.format；流式消费端要改成处理 Responses 的类型化事件。</p>
+<p>从 GPT-5.5 或更早版本迁来、并且用了提示缓存参数的，迁移指南要求把 prompt_cache_retention 换成 prompt_cache_options.ttl，取值为 &quot;30m&quot;。</p>
+<h2>图片输入：官方修复过一次图像编码问题</h2>
+<p>OpenAI 更新日志在 2026 年 9 月记录：修复了一个导致 GPT-6 Sol 和 GPT-6 Luna 图像理解能力下降的图像编码问题，修复后 API 和 Codex 里的视觉任务（包括电脑操作）结果有所改善。</p>
+<p>官方建议：如果你的用例涉及图片输入，重新跑一遍评测，并重试受这个问题影响的工作流。也就是说，如果你在修复之前用 gpt-6-luna 测过看图效果并因此放弃，结论可能需要重新验证。</p>
+<p>图片输入走 Responses 或 Chat Completions 都可以，模型页列出的输入模态是文本和图片。</p>
+<h2>通过 OpenLux 中转调用 gpt-6-luna 怎么验证</h2>
+<p>gpt-6-luna 目前在 OpenLux 价格接口中在售，列出的端点类型是 OpenAI 兼容的 Chat Completions 和 Responses，价格以官网价格页为准。</p>
+<p>客户端或 SDK 的 Base URL 填 https://api.openlux.ai/v1，Chat Completions 请求 /v1/chat/completions，Responses 请求 /v1/responses；Key 在 OpenLux 控制台的「令牌」页创建。</p>
+<p>验证分三步：先请求 /v1/models，能列出模型说明地址和 Key 都对，返回 401 说明 Key 错或没带上；再发一个最小请求，model 写 gpt-6-luna，只带一句输入和 low 推理档位，不带采样参数和工具，确认能拿到文本回复；最后再逐项加上 tools、图片或你需要的其他参数，哪一步出错就回到上面对应的小节排查。</p>
+<p>中转对上述各参数的处理本文没有逐项核实，遇到报错以实际返回内容为准，并对照本文列出的官方限制排查。</p>
+<p>还有其他问题？完整文档与客服入口见 <a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="docs">OpenLux</a>。</p>
+</div>
+<div>
+<h2>这个站还有这些内容</h2>
+<ul class="panel-list54">
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/quickstart/">gpt-6-luna API 在国内怎么接入？</a><span>接入步骤与可直接复制的代码</span></li>
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/compare/">gpt-6-luna 用官方直连还是中转？逐项对比</a><span>逐项对比，含中转方案的局限</span></li>
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/faq/">gpt-6-luna API 常见问题</a><span>接入时最常遇到的问题</span></li>
+</ul>
+</div>
+<div>
+<h2>开始使用</h2>
+<p>查看定价数据并确认接入参数</p>
+<p><a class="deck-card27" href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="register-bottom">创建账号，开始接入</a></p>
+<p>账号入口：<a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="link">查看详情</a></p>
+</div>
+<p class="note-note26">最后更新：2026年10月29日　|　本页由 OpenLux 编写并维护。<br>价格资料以文中标注的数据来源和查询日期为准；未完成的性能测试不作为承诺。实际可用性与计费以控制台为准。</p>
+</main>
+<script>
+(function(){
+  try{
+    var EP='https://tk.openlux.ai/collect',S='gpt-6-luna-api',L='zh-CN',V=1;
+    var sid=Math.random().toString(36).slice(2)+Date.now().toString(36);
+    function send(type,extra){
+      try{
+        var p={v:V,t:type,s:S,l:L,sid:sid,
+               r:document.referrer||'',
+               p:location.pathname||'/',
+               q:location.search||'',
+               sw:screen.width||0,
+               tz:(Intl.DateTimeFormat().resolvedOptions()||{}).timeZone||''};
+        for(var k in extra){p[k]=extra[k];}
+        var body=JSON.stringify(p);
+        if(navigator.sendBeacon){
+          navigator.sendBeacon(EP,new Blob([body],{type:'text/plain;charset=UTF-8'}));
+        }else{
+          fetch(EP,{method:'POST',body:body,keepalive:true,mode:'no-cors'});
+        }
+      }catch(e){}
+    }
+    if(document.visibilityState==='prerender'){
+      document.addEventListener('visibilitychange',function h(){
+        if(document.visibilityState!=='prerender'){
+          document.removeEventListener('visibilitychange',h);send('view');
+        }
+      });
+    }else{
+      send('view');
+    }
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest?e.target.closest('a[data-cta]'):null;
+      if(!a)return;
+      send('click',{c:a.getAttribute('data-cta')||'',h:a.href||''});
+    },{capture:true,passive:true});
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
