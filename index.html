@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>gpt-6-luna API 中转站：价格与接入说明（2026）</title>
+<meta name="description" content="了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。">
+<meta name="keywords" content="gpt-6-luna API 中转站,gpt-6-luna API,gpt-6-luna 接入,gpt-6-luna 价格,OpenAI 模型 API,API 中转,模型定价,token 计费">
+<link rel="canonical" href="https://a37836323.github.io/gpt-6-luna-api/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="gpt-6-luna API 中转站：价格与接入说明（2026）">
+<meta property="og:description" content="了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。">
+<meta property="og:url" content="https://api.openlux.ai/">
+<meta property="og:site_name" content="OpenLux">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="gpt-6-luna API 中转站：价格与接入说明（2026）">
+<meta name="twitter:description" content="了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://api.openlux.ai/#organization",
+      "name": "OpenLux",
+      "url": "https://api.openlux.ai",
+      "description": "了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。",
+      "sameAs": [
+        "https://openlux.ai",
+        "https://doc.openlux.ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#website",
+      "url": "https://a37836323.github.io/gpt-6-luna-api",
+      "name": "gpt-6-luna API 中转站：价格与接入说明（2026）",
+      "inLanguage": "zh-CN",
+      "publisher": {
+        "@id": "https://api.openlux.ai/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "OpenLux",
+          "item": "https://api.openlux.ai"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "gpt-6-luna API 中转站",
+          "item": "https://a37836323.github.io/gpt-6-luna-api/"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#application",
+      "name": "OpenLux API",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://api.openlux.ai",
+      "description": "了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。",
+      "offers": {
+        "@type": "Offer",
+        "price": "待实测",
+        "priceCurrency": "CNY",
+        "url": "https://api.openlux.ai",
+        "description": "模型定价资料以美元/百万 token 提供基准价，实际价格按用户所在分组的倍率计算；人民币结算方式、汇率口径及账户实际收费方式待确认。"
+      }
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#article",
+      "headline": "gpt-6-luna API 中转站：2026 接入与计费信息",
+      "datePublished": "2026-10-28",
+      "dateModified": "2026-10-29",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@id": "https://api.openlux.ai/#organization"
+      },
+      "publisher": {
+        "@id": "https://api.openlux.ai/#organization"
+      },
+      "mainEntityOfPage": "https://a37836323.github.io/gpt-6-luna-api/"
+    }
+  ]
+}
+</script>
+<style>*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#fffefb;color:#1c1917;font-family:Inter,"HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased;
+text-rendering:optimizeLegibility}
+.note-block70{max-width:780px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:1.85rem;line-height:1.4;margin:.2em 0 .6em;letter-spacing:-.01em}
+h2{font-size:1.3rem;margin:2.2em 0 .7em;padding-bottom:.35em;
+border-bottom:2px solid #fed7aa}
+h3{font-size:1.08rem;margin:1.6em 0 .5em}
+a{color:#ea580c;text-decoration:none}
+a:hover,a:focus-visible{text-decoration:underline}
+code{background:#fff7ed;padding:.15em .4em;border-radius:4px;
+font-size:.9em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;
+padding:16px;overflow-x:auto;font-size:.86rem;line-height:1.6}
+pre code{background:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:1.2em 0;font-size:.94rem}
+th,td{border:1px solid #fed7aa;padding:10px 12px;text-align:left}
+th{background:#fff7ed;font-weight:600}
+ul,ol{padding-left:1.5em}
+ul{list-style-type:disc}
+li{margin:.4em 0}
+.row-block17{background:#fff7ed;border-left:3px solid #ea580c;
+border-radius:0 8px 8px 0;padding:14px 18px;margin:1.4em 0}
+.col-grid78{display:inline-block;background:#ea580c;color:#fff;
+padding:12px 26px;border-radius:8px;font-weight:600;margin:.6em 0}
+.col-grid78:hover{opacity:.88;text-decoration:none}
+.row-unit53{color:#71717a;font-size:.86rem;margin-top:3em;
+padding-top:1.2em;border-top:1px solid #fed7aa}
+.zone-note12{border:1px solid #fed7aa;border-radius:8px;
+padding:2px 18px;margin:.8em 0}
+.head-deck50{overflow-x:auto}
+@media(max-width:600px){
+  body{font-size:15px}
+  h1{font-size:1.5rem}
+  h2{font-size:1.18rem}
+  .note-block70{padding:20px 16px 48px}
+  table{font-size:.85rem}
+  th,td{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}</style>
+</head>
+<body>
+<main class="note-block70">
+<p data-notice="price-20261025" style="margin:0 0 16px;padding:10px 14px;border:1px solid #f0c36d;background:#fff8e6;color:#5c4400;border-radius:6px;font-size:14px;line-height:1.6">本页价格与模型信息可能已有变化，请以官网为准：<a href="https://www.openlux.ai/pricing?utm_source=gpt-6-luna-api&amp;utm_medium=satellite&amp;utm_campaign=price_notice" style="color:#0b57d0">OpenLux 官网价格页</a></p>
+<h1>gpt-6-luna API 中转站：2026 接入与计费信息</h1>
+<p>现有资料没有提供 gpt-6-luna 的发布时间，因此这里不推测发布日期或发布时间线。本文聚焦通过中转站使用该模型时已知的基准价格、分组倍率，以及目前尚未确认的 API 接入参数。</p>
+
+<div>
+<h2>最新动态：已知信息与待确认项</h2>
+<ul>
+<li>面板定价接口为 <strong>https://api.openlux.ai/api/pricing</strong>，本页采用的定价数据拉取时间为 2026-10-28T17:06:13Z。</li>
+<li>定价数据列出的 gpt-6-luna 基准输入价格为 <strong>$0.1/百万 token</strong>，输出价格为 <strong>$0.5/百万 token</strong>。</li>
+<li>实际价格按基准价乘以用户所在分组的倍率；资料未说明某个账户对应的分组，不能据此给出统一实付价格。</li>
+<li>面板在售模型总数为 <strong>331</strong>；当前资料只列出调用量最高的 150 个模型，另有 181 个未列出。</li>
+<li>模型发布时间、上下文长度的独立验证结果，以及 gpt-6-luna 的 API 请求格式和兼容性，现有资料均未提供。</li>
+</ul>
+<p><a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="news">OpenLux</a></p>
+</div>
+<div>
+<h2>什么是 gpt-6-luna API 中转站？</h2>
+<p><strong>把中转站理解成 API 层面的反向代理加协议转换器，可能是最贴切的类比。</strong></p>
+<p>使用 gpt-6-luna 时，请先核对模型可用分组、请求协议和实际计费方式。</p>
+<p>OpenLux 提供模型 API 接入服务：<a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="link">查看详情</a> 当前价格目录包含 面板在售模型共 331 个；调用量最高的 150 个列于定价数据中，另有 181 个未列出 个模型。不同模型支持的接口、分组和计费规则可能不同，接入前请核对。</p>
+</div>
+<div>
+<h2>支持的模型与价格</h2>
+<div class="head-deck50">
+<table>
+<thead><tr><th>模型</th><th>适用场景</th><th>上下文</th><th>输入价格</th><th>输出价格</th><th>实测首字延迟</th></tr></thead>
+<tbody>
+<tr><td>gpt-6-luna</td><td>模型说明称其面向大批量并发、摘要提取与子 Agent 等高频任务；该能力描述未经本页独立验证</td><td>待实测</td><td>$0.1/百万 token（基准价，实际价格按分组倍率计算）</td><td>$0.5/百万 token（基准价，实际价格按分组倍率计算）</td><td>待实测</td></tr>
+</tbody>
+</table>
+</div>
+<p><small>价格以 <a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="pricing">gpt-6-luna API 中转站</a> 实时页面为准，本页更新于 2026年10月29日。</small></p>
+</div>
+<div>
+<h2>为什么需要 API 中转？</h2>
+<ul>
+<li><strong>基准价格有数据来源</strong>：gpt-6-luna 的基准输入、输出价格来自面板定价接口，不把基准价直接当作所有分组的实际价格。</li>
+<li><strong>展示分组计费规则</strong>：实际价格按基准价乘以用户所在分组的倍率计算；具体分组与适用倍率需要以账户配置为准。</li>
+<li><strong>标明价格单位</strong>：对话模型价格单位为美元/百万 token，便于区分 token 计费与按次计费模型。</li>
+<li><strong>披露数据覆盖范围</strong>：定价数据包含 331 个在售模型，但列出的表格仅覆盖调用量最高的 150 个，不将未列出的模型说成不支持。</li>
+<li><strong>接入细节不作猜测</strong>：当前资料没有给出 gpt-6-luna 的请求地址、鉴权方式或兼容协议，页面不将未经确认的接入方式描述为已验证事实。</li>
+</ul>
+<p>注册入口：<a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="link">前往官网</a>。注册后仍需创建密钥、选择可用分组并完成调用验证。</p>
+</div>
+<div>
+<h2>这个站还有这些内容</h2>
+<ul class="block-stack72">
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/quickstart/">gpt-6-luna API 在国内怎么接入？</a><span>接入步骤与可直接复制的代码</span></li>
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/compare/">gpt-6-luna 用官方直连还是中转？逐项对比</a><span>逐项对比，含中转方案的局限</span></li>
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/faq/">gpt-6-luna API 常见问题</a><span>接入时最常遇到的问题</span></li>
+</ul>
+</div>
+<div>
+<h2>开始使用</h2>
+<p>查看定价数据并确认接入参数</p>
+<p><a class="col-grid78" href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="register-bottom">创建账号，开始接入</a></p>
+<p>账号入口：<a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="link">gpt-6-luna API 中转站</a></p>
+</div>
+<p class="row-unit53">最后更新：2026年10月29日　|　本页由 OpenLux 编写并维护。<br>价格资料以文中标注的数据来源和查询日期为准；未完成的性能测试不作为承诺。实际可用性与计费以控制台为准。</p>
+</main>
+<script>
+(function(){
+  try{
+    var EP='https://tk.openlux.ai/collect',S='gpt-6-luna-api',L='zh-CN',V=1;
+    var sid=Math.random().toString(36).slice(2)+Date.now().toString(36);
+    function send(type,extra){
+      try{
+        var p={v:V,t:type,s:S,l:L,sid:sid,
+               r:document.referrer||'',
+               p:location.pathname||'/',
+               q:location.search||'',
+               sw:screen.width||0,
+               tz:(Intl.DateTimeFormat().resolvedOptions()||{}).timeZone||''};
+        for(var k in extra){p[k]=extra[k];}
+        var body=JSON.stringify(p);
+        if(navigator.sendBeacon){
+          navigator.sendBeacon(EP,new Blob([body],{type:'text/plain;charset=UTF-8'}));
+        }else{
+          fetch(EP,{method:'POST',body:body,keepalive:true,mode:'no-cors'});
+        }
+      }catch(e){}
+    }
+    if(document.visibilityState==='prerender'){
+      document.addEventListener('visibilitychange',function h(){
+        if(document.visibilityState!=='prerender'){
+          document.removeEventListener('visibilitychange',h);send('view');
+        }
+      });
+    }else{
+      send('view');
+    }
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest?e.target.closest('a[data-cta]'):null;
+      if(!a)return;
+      send('click',{c:a.getAttribute('data-cta')||'',h:a.href||''});
+    },{capture:true,passive:true});
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
