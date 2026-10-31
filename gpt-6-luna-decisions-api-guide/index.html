@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>gpt-6-luna 的 Decisions API 怎么用：predicate、choice、score 三种问题，以及经中转能不能调</title>
+<meta name="description" content="按 OpenAI 官方 Decisions 指南和接口参考整理：/v1/decisions 只支持 gpt-6-luna，10 月 22 日正式可用；predicate、choice、score 三种问题的写法和返回值、input 能放什么、什么时候不该用，以及 OpenLux 中转目前只标注 Chat Completions 与 Responses 两类接口时该怎么办。">
+<meta name="keywords" content="gpt-6-luna API 中转站,gpt-6-luna API,gpt-6-luna 接入,gpt-6-luna 价格,OpenAI 模型 API,API 中转,模型定价,token 计费">
+<link rel="canonical" href="https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-decisions-api-guide/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="gpt-6-luna 的 Decisions API 怎么用：predicate、choice、score 三种问题，以及经中转能不能调">
+<meta property="og:description" content="按 OpenAI 官方 Decisions 指南和接口参考整理：/v1/decisions 只支持 gpt-6-luna，10 月 22 日正式可用；predicate、choice、score 三种问题的写法和返回值、input 能放什么、什么时候不该用，以及 OpenLux 中转目前只标注 Chat Completions 与 Responses 两类接口时该怎么办。">
+<meta property="og:url" content="https://api.openlux.ai/">
+<meta property="og:site_name" content="OpenLux">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="gpt-6-luna 的 Decisions API 怎么用：predicate、choice、score 三种问题，以及经中转能不能调">
+<meta name="twitter:description" content="按 OpenAI 官方 Decisions 指南和接口参考整理：/v1/decisions 只支持 gpt-6-luna，10 月 22 日正式可用；predicate、choice、score 三种问题的写法和返回值、input 能放什么、什么时候不该用，以及 OpenLux 中转目前只标注 Chat Completions 与 Responses 两类接口时该怎么办。">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://api.openlux.ai/#organization",
+      "name": "OpenLux",
+      "url": "https://api.openlux.ai",
+      "description": "了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。",
+      "sameAs": [
+        "https://openlux.ai",
+        "https://doc.openlux.ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#website",
+      "url": "https://a37836323.github.io/gpt-6-luna-api",
+      "name": "gpt-6-luna API 中转站：价格与接入说明（2026）",
+      "inLanguage": "zh-CN",
+      "publisher": {
+        "@id": "https://api.openlux.ai/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-decisions-api-guide/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "OpenLux",
+          "item": "https://api.openlux.ai"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "gpt-6-luna API 中转站",
+          "item": "https://a37836323.github.io/gpt-6-luna-api/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "gpt-6-luna Decisions API 使用说明：三种问题类型、输入限制与中转可用性",
+          "item": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-decisions-api-guide/"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/#application",
+      "name": "OpenLux API",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://api.openlux.ai",
+      "description": "了解 gpt-6-luna API 中转站的已知基准价格、计费倍率与接入信息。模型基准输入价为 $0.1/百万 token，实际价格按分组倍率计算。",
+      "offers": {
+        "@type": "Offer",
+        "price": "待实测",
+        "priceCurrency": "CNY",
+        "url": "https://api.openlux.ai",
+        "description": "模型定价资料以美元/百万 token 提供基准价，实际价格按用户所在分组的倍率计算；人民币结算方式、汇率口径及账户实际收费方式待确认。"
+      }
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-decisions-api-guide/#article",
+      "headline": "gpt-6-luna Decisions API 使用说明：三种问题类型、输入限制与中转可用性",
+      "datePublished": "2026-10-28",
+      "dateModified": "2026-11-01",
+      "inLanguage": "zh-CN",
+      "author": {
+        "@id": "https://api.openlux.ai/#organization"
+      },
+      "publisher": {
+        "@id": "https://api.openlux.ai/#organization"
+      },
+      "mainEntityOfPage": "https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-decisions-api-guide/"
+    }
+  ]
+}
+</script>
+<style>*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#fffefb;color:#1c1917;font-family:Inter,"HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased;
+text-rendering:optimizeLegibility}
+.stack-pane72{max-width:780px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:1.85rem;line-height:1.4;margin:.2em 0 .6em;letter-spacing:-.01em}
+h2{font-size:1.3rem;margin:2.2em 0 .7em;padding-bottom:.35em;
+border-bottom:2px solid #fed7aa}
+h3{font-size:1.08rem;margin:1.6em 0 .5em}
+a{color:#ea580c;text-decoration:none}
+a:hover,a:focus-visible{text-decoration:underline}
+code{background:#fff7ed;padding:.15em .4em;border-radius:4px;
+font-size:.9em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;
+padding:16px;overflow-x:auto;font-size:.86rem;line-height:1.6}
+pre code{background:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:1.2em 0;font-size:.94rem}
+th,td{border:1px solid #fed7aa;padding:10px 12px;text-align:left}
+th{background:#fff7ed;font-weight:600}
+ul,ol{padding-left:1.5em}
+ul{list-style-type:disc}
+li{margin:.4em 0}
+.row-col56{background:#fff7ed;border-left:3px solid #ea580c;
+border-radius:0 8px 8px 0;padding:14px 18px;margin:1.4em 0}
+.deck-card27{display:inline-block;background:#ea580c;color:#fff;
+padding:12px 26px;border-radius:8px;font-weight:600;margin:.6em 0}
+.deck-card27:hover{opacity:.88;text-decoration:none}
+.note-note26{color:#71717a;font-size:.86rem;margin-top:3em;
+padding-top:1.2em;border-top:1px solid #fed7aa}
+.head-row28{border:1px solid #fed7aa;border-radius:8px;
+padding:2px 18px;margin:.8em 0}
+.box-row24{overflow-x:auto}
+@media(max-width:600px){
+  body{font-size:15px}
+  h1{font-size:1.5rem}
+  h2{font-size:1.18rem}
+  .stack-pane72{padding:20px 16px 48px}
+  table{font-size:.85rem}
+  th,td{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}</style>
+</head>
+<body>
+<main class="stack-pane72">
+<p data-notice="price-20261025" style="margin:0 0 16px;padding:10px 14px;border:1px solid #f0c36d;background:#fff8e6;color:#5c4400;border-radius:6px;font-size:14px;line-height:1.6">本页价格与模型信息可能已有变化，请以官网为准：<a href="https://www.openlux.ai/pricing?utm_source=gpt-6-luna-api&amp;utm_medium=satellite&amp;utm_campaign=price_notice" style="color:#0b57d0">OpenLux 官网价格页</a></p>
+<p class="deck-deck53"><a href="https://a37836323.github.io/gpt-6-luna-api/">首页</a> ／ gpt-6-luna</p>
+<h1>gpt-6-luna Decisions API 使用说明：三种问题类型、输入限制与中转可用性</h1>
+<p>Decisions API（POST /v1/decisions）是 OpenAI 专门做分类、路由、打分的接口，目前只支持 gpt-6-luna：10 月 6 日以 beta 发布，10 月 22 日正式可用。它不生成自由文本，而是对你提的每个问题返回带类型的答案：predicate 返回条件成立的概率，choice 从固定选项里选一个，score 按评分档位给出加权分数。需要注意的是，OpenLux 价格接口目前给 gpt-6-luna 标注的接口类型只有 openai（Chat Completions）和 openai-response（Responses），没有 Decisions；要用 Decisions 需要直连 OpenAI 官方。下面按官方 Decisions 指南、创建 decision 的接口参考和更新日志逐项说明。</p>
+
+<div>
+<h2>Decisions API 是什么，和 gpt-6-luna 是什么关系</h2>
+<p>官方指南的定义是：Decisions API 接收文本、图片和 JSON，返回带类型的答案，典型用途是分类、请求路由和优先级排序。接口地址是 POST /v1/decisions，接口参考写明 model 只支持 gpt-6-luna，指南也称它是「目前唯一支持的模型」。官方指南还称它比 Responses API 快约 10 倍，这是官方说法，本页没有独立验证。</p>
+<p>OpenAI 更新日志里的时间线：2026 年 10 月 6 日以 beta 形式随 gpt-6-luna 发布；10 月 15 日在 GPT-Live 里加入了原生 Decisions 集成；10 月 22 日正式可用，并加入了共享输入的提示缓存。</p>
+<p>指南「What&#x27;s new」一节列出了 beta 之后新增的能力：提示缓存、问题里可以带图片、input_json 内容块、每次请求最多 400 个问题（beta 时是 200 个）、除 base64 data URL 外还支持公网 HTTP/HTTPS 图片地址、对话历史里可以带函数调用和自定义工具调用及其输出、组织级用量报表、GPT-Live 集成和 Private Link。如果你在 beta 阶段试过并遇到「问题数超限」「图片地址不支持」，这些限制已经变了。</p>
+<h2>一次请求的三个字段和三种问题类型</h2>
+<p>请求体的核心只有三个字段：model 写 gpt-6-luna；input 是所有问题共用的证据，可以是一段字符串，也可以是按顺序排列的消息、工具调用和工具输出数组；questions 是问题列表，每个问题有 type、instructions，按类型再带 choices 或 levels。建议每个问题都给一个唯一的 name，返回时会原样带回，方便对应。</p>
+<p>predicate 用来判断一个条件是否成立，返回 probability，是 0 到 1 之间的概率。例如官方示例问「照片里的商品是否有可见损坏」，示例返回 0.92，超过多少算「有损坏」由你自己定阈值。</p>
+<p>choice 用来在无序类别里选一个。choices 要有 2 到 255 个不重复的选项，每项有 value（字符串或布尔值）和可选的 description；接口参考特别说明字符串和同文本的布尔值算两个不同的值。返回 choice（选中的值）、probabilities（每个选项的概率）和 confidence。官方建议加一个 other 之类的兜底选项，覆盖你的类别没想到的输入。</p>
+<p>score 用来按有序档位打分。levels 要有 2 到 10 档，每档有 label 和可选的 description，按从低到高排列，下标从 0 开始。返回的 score 是各档下标按概率加权的平均值，同时返回每档的 probabilities 和 confidence。官方举的例子是三档概率分别为 0.1、0.7、0.2 时，score 为 1.1。</p>
+<h2>input 能放什么，不能放什么</h2>
+<p>按指南和接口参考：user 消息可以放 input_text、input_image 和 input_json；developer 和 system 消息只能放文本，system 消息按 developer 消息处理；assistant 消息放 output_text 或 refusal；函数调用和自定义工具调用的输出可以是文本或图片，并且每个工具输出都要用 call_id 对应到它的调用。</p>
+<p>不支持的内容：文件、音频和 item 引用。图片只能用 base64 data URL 或公网 HTTP/HTTPS 地址，不支持 file_id；detail 可选 low、high、auto、original，默认 auto。</p>
+<p>input_json 只能出现在 user 消息里，把对象或对象数组放进 data 字段。接口参考给出的上限是 32 层嵌套、10,000 个值、压缩后 256 KiB。指南说明 data 里即使有 role 这样的键也只当作数据，传 JSON 也不会改变返回格式。</p>
+<p>问题本身也可以带图片：predicate、choice、score 的 instructions 可以是由 input_text、input_image 组成的非空数组，不需要 role 包装。官方给的用法是把一张参考图放在 input 里，每张候选图各提一个问题；问题里的图片和 input 里的图片共用同一套单次请求图片数量限制。</p>
+<h2>怎么读返回结果、怎么定阈值</h2>
+<p>返回对象里的 answers 与 questions 顺序一致，每个答案带 name 和 type。任何一个问题都可能返回 type 为 refusal 的拒答，其它问题照常返回答案，所以代码里要先判断 type 再取 probability、choice 或 score。官方各语言示例都处理了 refusal 分支。</p>
+<p>一次请求可以问 1 到 400 个问题，类型可以混用。但如果一个判断依赖另一个判断的结果，官方建议拆成先后两次请求。写问题时尽量基于可观察的标准、一个问题只管一件事；choice 的选项之间、score 的相邻档位之间要区分清楚。</p>
+<p>阈值怎么定，指南的建议是用你自己业务里带标注的样本来校准，同时权衡误报和漏报各自的代价，而不是直接拿 0.5 当分界线。</p>
+<p>用量看 usage：input_tokens、output_tokens、total_tokens，以及 input_tokens_details 里的 cached_tokens 和 cache_write_tokens。官方说明后两者已经包含在 input_tokens 里，不要重复相加。组织管理员可以用带 api.usage.read 权限的管理 Key 查 GET /v1/organization/usage/decisions，其中 num_model_requests 统计的是请求数，不是问题数。价格与缓存计费以官网价格页为准。</p>
+<h2>什么时候不该用 Decisions</h2>
+<p>官方明确列了两种情况：需要模型按你自己的 JSON schema 输出对象（例如抽取字段、写解释）时，用 Responses API 的 Structured Outputs；需要模型发起带参数的工具调用时，用函数调用。</p>
+<p>另外，Decisions 只负责回答问题，不会替你执行任何动作。比如路由场景里它告诉你这条请求该分到哪个类别，真正的转发、工单创建要由你的程序根据答案去做。</p>
+<p>所以可以这样判断：结果只需要「是否成立的概率」「从固定类别里选一个」「在几档里打个分」，并且希望拿到概率和置信度，就适合 Decisions；结果需要自由文本、结构化字段或工具调用，就留在 Responses 或 Chat Completions。</p>
+<h2>通过 OpenLux 中转能不能调用 Decisions</h2>
+<p>OpenLux 价格接口给 gpt-6-luna 标注的接口类型目前只有 openai 和 openai-response，也就是 /v1/chat/completions 和 /v1/responses，没有标注 Decisions。本页没有核实 /v1/decisions 经中转的行为，不要按「中转支持 Decisions」来设计系统；确实需要 Decisions 的概率与置信度输出，请直连 OpenAI 官方接口。</p>
+<p>如果只是想通过中转用 gpt-6-luna 做分类，可以走 Responses API 的 Structured Outputs：在 text.format 里设 type 为 json_schema、strict 为 true，用 enum 列出允许的类别。官方 Structured Outputs 指南用分类做过示例，并说明开启后不用担心模型输出不存在的枚举值。要注意这种写法拿到的是一个按 schema 生成的 JSON，没有 Decisions 那样的 probability、probabilities 和 confidence，二者不是同一个东西。</p>
+<p>调用前的验证步骤：Base URL 填 https://api.openlux.ai/v1，Key 在 OpenLux 控制台「令牌」页创建；先请求 /v1/models，能列出模型说明地址和 Key 都对，返回 401 说明 Key 错或没带上；再向 /v1/responses 发一个 model 为 gpt-6-luna 的最小请求，确认能拿到回复，最后再加上 Structured Outputs 的 schema。推理档位、采样参数和工具调用的限制，见本站「参数与端点」一页。</p>
+<p>还有其他问题？完整文档与客服入口见 <a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="docs">OpenLux</a>。</p>
+</div>
+<div>
+<h2>这个站还有这些内容</h2>
+<ul class="panel-list54">
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/quickstart/">gpt-6-luna API 在国内怎么接入？</a><span>接入步骤与可直接复制的代码</span></li>
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/compare/">gpt-6-luna 用官方直连还是中转？逐项对比</a><span>逐项对比，含中转方案的局限</span></li>
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/faq/">gpt-6-luna API 常见问题</a><span>接入时最常遇到的问题</span></li>
+<li><a href="https://a37836323.github.io/gpt-6-luna-api/gpt-6-luna-api-reasoning-effort-endpoint-tools/">gpt-6-luna API 调用参数说明：推理档位、端点选择与工具限制</a><span>参数与端点</span></li>
+</ul>
+</div>
+<div>
+<h2>开始使用</h2>
+<p>查看定价数据并确认接入参数</p>
+<p><a class="deck-card27" href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="register-bottom">创建账号，开始接入</a></p>
+<p>账号入口：<a href="https://api.openlux.ai/register?channel=c_tgapaavi" rel="nofollow noopener" data-cta="link">查看详情</a></p>
+</div>
+<p class="note-note26">最后更新：2026年11月01日　|　本页由 OpenLux 编写并维护。<br>价格资料以文中标注的数据来源和查询日期为准；未完成的性能测试不作为承诺。实际可用性与计费以控制台为准。</p>
+</main>
+<script>
+(function(){
+  try{
+    var EP='https://tk.openlux.ai/collect',S='gpt-6-luna-api',L='zh-CN',V=1;
+    var sid=Math.random().toString(36).slice(2)+Date.now().toString(36);
+    function send(type,extra){
+      try{
+        var p={v:V,t:type,s:S,l:L,sid:sid,
+               r:document.referrer||'',
+               p:location.pathname||'/',
+               q:location.search||'',
+               sw:screen.width||0,
+               tz:(Intl.DateTimeFormat().resolvedOptions()||{}).timeZone||''};
+        for(var k in extra){p[k]=extra[k];}
+        var body=JSON.stringify(p);
+        if(navigator.sendBeacon){
+          navigator.sendBeacon(EP,new Blob([body],{type:'text/plain;charset=UTF-8'}));
+        }else{
+          fetch(EP,{method:'POST',body:body,keepalive:true,mode:'no-cors'});
+        }
+      }catch(e){}
+    }
+    if(document.visibilityState==='prerender'){
+      document.addEventListener('visibilitychange',function h(){
+        if(document.visibilityState!=='prerender'){
+          document.removeEventListener('visibilitychange',h);send('view');
+        }
+      });
+    }else{
+      send('view');
+    }
+    document.addEventListener('click',function(e){
+      var a=e.target&&e.target.closest?e.target.closest('a[data-cta]'):null;
+      if(!a)return;
+      send('click',{c:a.getAttribute('data-cta')||'',h:a.href||''});
+    },{capture:true,passive:true});
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
